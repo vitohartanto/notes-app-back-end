@@ -10,7 +10,7 @@ const NotesValidator = require('./validator/notes');
 // users
 const users = require('./api/users');
 const UsersService = require('./services/postgres/UsersService');
-const UsersValidator = require('./validator/notes');
+const UsersValidator = require('./validator/users');
 
 const ClientError = require('./exceptions/ClientError');
 
