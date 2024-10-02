@@ -1,5 +1,3 @@
-// const ClientError = require('../../exceptions/ClientError');
-
 class AuthenticationsHandler {
   constructor(authenticationsService, usersService, tokenManager, validator) {
     this._authenticationsService = authenticationsService;
@@ -13,8 +11,9 @@ class AuthenticationsHandler {
       this.deleteAuthenticationHandler.bind(this);
   }
 
-  postAuthenticationHandler = async (request, h) => {
+  async postAuthenticationHandler(request, h) {
     this._validator.validatePostAuthenticationPayload(request.payload);
+
     const { username, password } = request.payload;
     const id = await this._usersService.verifyUserCredential(
       username,
@@ -36,9 +35,9 @@ class AuthenticationsHandler {
     });
     response.code(201);
     return response;
-  };
+  }
 
-  putAuthenticationHandler = async (request) => {
+  async putAuthenticationHandler(request) {
     this._validator.validatePutAuthenticationPayload(request.payload);
 
     const { refreshToken } = request.payload;
@@ -53,21 +52,20 @@ class AuthenticationsHandler {
         accessToken,
       },
     };
-  };
+  }
 
-  deleteAuthenticationHandler = async (request) => {
+  async deleteAuthenticationHandler(request) {
     this._validator.validateDeleteAuthenticationPayload(request.payload);
 
     const { refreshToken } = request.payload;
     await this._authenticationsService.verifyRefreshToken(refreshToken);
-
     await this._authenticationsService.deleteRefreshToken(refreshToken);
 
     return {
       status: 'success',
       message: 'Refresh token berhasil dihapus',
     };
-  };
+  }
 }
 
 module.exports = AuthenticationsHandler;

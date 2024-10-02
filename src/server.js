@@ -1,3 +1,4 @@
+// mengimpor dotenv dan menjalankan konfigurasinya
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
@@ -7,6 +8,7 @@ const Jwt = require('@hapi/jwt');
 const notes = require('./api/notes');
 const NotesService = require('./services/postgres/NotesService');
 const NotesValidator = require('./validator/notes');
+const ClientError = require('./exceptions/ClientError');
 
 // users
 const users = require('./api/users');
@@ -24,15 +26,11 @@ const collaborations = require('./api/collaborations');
 const CollaborationsService = require('./services/postgres/CollaborationsService');
 const CollaborationsValidator = require('./validator/collaborations');
 
-const ClientError = require('./exceptions/ClientError');
-
-// Server dengan Hapi.js
-
 const init = async () => {
-  const notesService = new NotesService();
+  const collaborationsService = new CollaborationsService();
+  const notesService = new NotesService(collaborationsService);
   const usersService = new UsersService();
   const authenticationsService = new AuthenticationsService();
-  const collaborationsService = new CollaborationsService();
 
   const server = Hapi.server({
     port: process.env.PORT,
@@ -106,7 +104,7 @@ const init = async () => {
     // mendapatkan konteks response dari request
     const { response } = request;
 
-    // penanganan client error secara internal
+    // penanganan client error secara internal.
     if (response instanceof ClientError) {
       const newResponse = h.response({
         status: 'fail',
