@@ -22,3 +22,5 @@ class ExportsHandler {
     return response;
   }
 }
+
+module.exports = ExportsHandler;
