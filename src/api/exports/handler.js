@@ -2,6 +2,8 @@ class ExportsHandler {
   constructor(service, validator) {
     this._service = service;
     this._validator = validator;
+
+    this.postExportNotesHandler = this.postExportNotesHandler.bind(this);
   }
 
   async postExportNotesHandler(request, h) {
